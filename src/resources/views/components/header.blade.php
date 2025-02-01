@@ -13,6 +13,12 @@
             </li>
 
             <li>
+                <a href="{{ route('orders.index') }}">
+                    Заказы
+                </a>
+            </li>
+
+            <li>
                 <a href="{{ route('tariffs.index') }}">
                     Тарифы
                 </a>
