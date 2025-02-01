@@ -11,5 +11,8 @@ class Tariff extends Model
         'cooking_day_before',
     ];
 
-
+    public function getCookingDayAttribute(): string
+    {
+        return $this->cooking_day_before ? 'за день до доставки' : 'в день доставки';
+    }
 }
