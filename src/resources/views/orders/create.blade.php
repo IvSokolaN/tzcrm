@@ -91,6 +91,36 @@
             </span>
             @enderror
 
+            <div class="label">
+                <span class="label-text">Дата от</span>
+            </div>
+            <input type="date"
+                   placeholder="Дата от"
+                   class="input input-bordered w-full"
+                   name="first_date"
+                   value="{{ old('first_date') }}"
+            />
+            @error('first_date')
+            <span class="text-red-500">
+                {{ $message }}
+            </span>
+            @enderror
+
+            <div class="label">
+                <span class="label-text">Дата до</span>
+            </div>
+            <input type="date"
+                   placeholder="Дата до"
+                   class="input input-bordered w-full"
+                   name="last_date"
+                   value="{{ old('last_date') }}"
+            />
+            @error('last_date')
+            <span class="text-red-500">
+                {{ $message }}
+            </span>
+            @enderror
+
             <button type="submit" class="btn btn-primary mt-4">Создать</button>
         </form>
     </div>

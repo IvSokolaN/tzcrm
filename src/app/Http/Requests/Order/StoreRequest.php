@@ -24,6 +24,7 @@ class StoreRequest extends FormRequest
                 'required',
                 'string',
                 'max:21',
+                'unique:orders,client_phone',
             ],
             'tariff' => [
                 'required',
@@ -38,6 +39,17 @@ class StoreRequest extends FormRequest
             'comment' => [
                 'nullable',
                 'string',
+            ],
+            'first_date' => [
+                'required',
+                'date',
+                'after_or_equal:today',
+//                'before:last_date',
+            ],
+            'last_date' => [
+                'required',
+                'date',
+                'after_or_equal:first_date',
             ],
         ];
     }
@@ -58,6 +70,14 @@ class StoreRequest extends FormRequest
             'client_phone.required' => 'Телефон обязательно для заполнения',
             'client_phone.string' => 'Телефон должно быть строкой',
             'client_phone.max' => 'Телефон не должно превышать 21 символ',
+            'client_phone.unique' => 'Заказ с этим номером телефона уже используется',
+            'first_date.required' => 'Дата от обязательна для заполнения',
+            'first_date.date' => 'Дата от должна быть датой',
+            'first_date.after_or_equal' => 'Дата от должна быть больше или равна сегодняшней дате: ' . date('d.m.Y'),
+            'first_date.before' => 'Дата от должна быть меньше даты до',
+            'last_date.required' => 'Дата до обязательна для заполнения',
+            'last_date.date' => 'Дата до должна быть датой',
+            'last_date.after_or_equal' => 'Дата до должна быть больше или равна дате от',
         ];
     }
 }

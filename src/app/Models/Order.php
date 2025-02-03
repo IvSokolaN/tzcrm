@@ -23,8 +23,8 @@ class Order extends Model
 
     protected $casts = [
         'schedule_type' => DeliveryScheduleType::class,
-        'first_date' => 'datetime',
-        'last_date' => 'datetime',
+        'first_date' => 'date',
+        'last_date' => 'date',
     ];
 
     /**
