@@ -1,58 +1,78 @@
-<x-layout>
+<x-layout xmlns="http://www.w3.org/1999/html">
     <x-slot:title>
-        Тарифы - Редактирование
+        Заказ - {{ $order->id }}
     </x-slot>
 
-    <div class="card bg-base-100 w-full shadow-xl">
-        <form action="{{ route('tariffs.update', $tariff->id) }}"
-              method="POST"
-              class="card-body w-1/3">
-            @csrf
-            @method('patch')
+    <div class="flex flex-col gap-4 w-1/2">
+        <table class="table table-zebra">
+            <tbody>
+            <tr class="hover">
+                <th>Клиент</th>
+                <td>{{ $order->client_name }}</td>
+            </tr>
 
-            <div class="label">
-                <span class="label-text">Название рациона</span>
-            </div>
-            <input type="text"
-                   placeholder="Название рациона"
-                   class="input input-bordered w-full"
-                   name="ration_name"
-                   value="{{ old('ration_name') ?? $tariff->ration_name }}"
-            />
-            @error('ration_name')
-            <span class="text-red-500">
-                {{ $message }}
-            </span>
-            @enderror
+            <tr class="hover">
+                <th>Номер телефона</th>
+                <td>{{ $order->client_phone }}</td>
+            </tr>
 
-            <div class="form-control">
-                <label class="label cursor-pointer">
-                    <input type="radio"
-                           name="cooking_day_before"
-                           class="radio checked:bg-red-500"
-                           value="1"
-                        {{ $tariff->cooking_day_before == 1  ? 'checked' : '' }}/>
-                    <span class="label-text">готовить рацион за день до доставки</span>
-                </label>
-            </div>
-            <div class="form-control">
-                <label class="label cursor-pointer">
-                    <input type="radio"
-                           name="cooking_day_before"
-                           class="radio checked:bg-blue-500"
-                           value="0"
-                        {{ $tariff->cooking_day_before == 0 ? 'checked' : '' }}/>
-                    <span class="label-text">готовить рацион в день доставки</span>
-                </label>
-            </div>
+            <tr class="hover">
+                <th>Тип расписания доставки рационов</th>
+                <td>{{ $deliveryScheduleType }}</td>
+            </tr>
 
-            @error('cooking_day_before')
-            <span class="text-red-500">
-                {{ $message }}
-            </span>
-            @enderror
+            <tr class="hover">
+                <th>Комментарий</th>
+                <td>{{ $order->comment }}</td>
+            </tr>
 
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-        </form>
+            <tr class="hover">
+                <th>Начальная дата заказа</th>
+                <td>{{ $order->firstDateFormat }}</td>
+            </tr>
+
+            <tr class="hover">
+                <th>Конечная дата заказа</th>
+                <td>{{ $order->lastDateFormat }}</td>
+            </tr>
+
+            <tr class="hover">
+                <th>Тариф</th>
+                <td>
+                    <a href="{{ route('tariffs.edit', $tariff->id) }}"
+                       class="link"
+                       target="_blank">
+                        {{ $tariff->ration_name }}
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="overflow-x-auto">
+            <h2 class="text-2xl font-bold mb-4">Рационы Питания</h2>
+
+            <table class="table table-zebra">
+                <thead>
+                <tr>
+                    <th>Дата готовки</th>
+                    <th>Дата доставки</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($mealPlans as $mealPlan)
+                    <tr class="hover">
+                        <td>
+                            {{ $mealPlan->cookingDateFormat }}
+                        </td>
+
+                        <td>
+                            {{ $mealPlan->deliveryDateFormat }}
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </x-layout>

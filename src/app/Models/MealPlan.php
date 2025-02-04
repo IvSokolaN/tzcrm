@@ -25,4 +25,20 @@ class MealPlan extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    /**
+     * @return string
+     */
+    public function getCookingDateFormatAttribute(): string
+    {
+        return $this->cooking_date->translatedFormat('d F Y');
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeliveryDateFormatAttribute(): string
+    {
+        return $this->delivery_date->translatedFormat('d F Y');
+    }
 }

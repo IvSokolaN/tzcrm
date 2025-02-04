@@ -48,10 +48,10 @@ class OrderController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        $tariff = Tariff::query()
-            ->findOrFail($request->integer('tariff'));
+        DB::transaction(function () use ($request) {
+            $tariff = Tariff::query()
+                ->findOrFail($request->integer('tariff'));
 
-        DB::transaction(function () use ($tariff, $request) {
             $dateFroms = $request->array('first_date');
             $dateTos = $request->array('last_date');
             $firstDate = $dateFroms[0];
@@ -159,6 +159,15 @@ class OrderController extends Controller
      */
     public function show(Order $order): View|Application|Factory
     {
-        return view('orders.show', compact('order'));
+        $deliveryScheduleType = __("delivery_schedule.{$order->schedule_type->value}");
+        $mealPlans = $order->mealPlans;
+        $tariff = $order->tariff;
+
+        return view('orders.show', compact(
+            'order',
+            'deliveryScheduleType',
+            'mealPlans',
+            'tariff'
+        ));
     }
 }

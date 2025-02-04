@@ -2,8 +2,6 @@
 
 namespace App\Enum;
 
-use Illuminate\Support\Facades\Lang;
-
 enum DeliveryScheduleType:string
 {
     case EVERY_DAY = 'EVERY_DAY';
