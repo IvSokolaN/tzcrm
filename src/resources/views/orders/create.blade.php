@@ -95,8 +95,8 @@
 
             <fieldset>
                 <legend class="text-xl">Даты доставки</legend>
-                <div class="flex flex-col gap-4 mt-4">
-                    <h2>Период 1</h2>
+                <div class="flex flex-col gap-4 mt-4" id="periodsContainer">
+{{--                    <h2>Период 1</h2>--}}
 
                     <div class="flex justify-between gap-6">
                         <div class="flex-1">
@@ -134,47 +134,94 @@
                         </div>
                     </div>
 
-                    <h2>Период 2</h2>
+{{--                    <h2>Период 2</h2>--}}
 
-                    <div class="flex justify-between gap-6">
-                        <div class="flex-1">
-                            <div class="label w-1/5">
-                                <span class="label-text">Дата от</span>
-                            </div>
-                            <input type="date"
-                                   placeholder="Дата от"
-                                   class="input input-bordered w-full"
-                                   name="first_date[]"
-                                   value="{{ old('first_date.1') }}"
-                            />
-                            @error('first_date.1')
-                            <span class="text-red-500">
-                                {{ $message }}
-                            </span>
-                            @enderror
-                        </div>
+                    {{--                    <div class="flex justify-between gap-6">--}}
+                    {{--                        <div class="flex-1">--}}
+                    {{--                            <div class="label w-1/5">--}}
+                    {{--                                <span class="label-text">Дата от</span>--}}
+                    {{--                            </div>--}}
+                    {{--                            <input type="date"--}}
+                    {{--                                   placeholder="Дата от"--}}
+                    {{--                                   class="input input-bordered w-full"--}}
+                    {{--                                   name="first_date[]"--}}
+                    {{--                                   value="{{ old('first_date.1') }}"--}}
+                    {{--                            />--}}
+                    {{--                            @error('first_date.1')--}}
+                    {{--                            <span class="text-red-500">--}}
+                    {{--                                {{ $message }}--}}
+                    {{--                            </span>--}}
+                    {{--                            @enderror--}}
+                    {{--                        </div>--}}
 
-                        <div class="flex-1">
-                            <div class="label w-1/5">
-                                <span class="label-text">Дата до</span>
-                            </div>
-                            <input type="date"
-                                   placeholder="Дата до"
-                                   class="input input-bordered w-full"
-                                   name="last_date[]"
-                                   value="{{ old('last_date.1') }}"
-                            />
-                            @error('last_date.1')
-                            <span class="text-red-500">
-                                {{ $message }}
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
+                    {{--                        <div class="flex-1">--}}
+                    {{--                            <div class="label w-1/5">--}}
+                    {{--                                <span class="label-text">Дата до</span>--}}
+                    {{--                            </div>--}}
+                    {{--                            <input type="date"--}}
+                    {{--                                   placeholder="Дата до"--}}
+                    {{--                                   class="input input-bordered w-full"--}}
+                    {{--                                   name="last_date[]"--}}
+                    {{--                                   value="{{ old('last_date.1') }}"--}}
+                    {{--                            />--}}
+                    {{--                            @error('last_date.1')--}}
+                    {{--                            <span class="text-red-500">--}}
+                    {{--                                {{ $message }}--}}
+                    {{--                            </span>--}}
+                    {{--                            @enderror--}}
+                    {{--                        </div>--}}
+                    {{--                    </div>--}}
                 </div>
+
+                <button id="addPeriodButton" type="button" class="btn btn-primary mt-4">Добавить период</button>
             </fieldset>
 
             <button type="submit" class="btn btn-primary mt-4">Создать</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('addPeriodButton').addEventListener('click', function() {
+            const container = document.getElementById('periodsContainer');
+            const periodIndex = container.children.length;
+            const periodHTML = `
+        <div class="flex justify-between gap-6">
+            <div class="flex-1">
+                <div class="label w-1/5">
+                    <span class="label-text">Дата от</span>
+                </div>
+                <input type="date"
+                       placeholder="Дата от"
+                       class="input input-bordered w-full"
+                       name="first_date[]"
+                       value=""
+                />
+                @error('first_date.${periodIndex}')
+            <span class="text-red-500">
+{{ $message }}
+            </span>
+@enderror
+            </div>
+
+            <div class="flex-1">
+                <div class="label w-1/5">
+                    <span class="label-text">Дата до</span>
+                </div>
+                <input type="date"
+                       placeholder="Дата до"
+                       class="input input-bordered w-full"
+                       name="last_date[]"
+                       value=""
+                />
+                @error('last_date.${periodIndex}')
+            <span class="text-red-500">
+{{ $message }}
+            </span>
+@enderror
+            </div>
+        </div>
+    `;
+            container.insertAdjacentHTML('beforeend', periodHTML);
+        });
+    </script>
 </x-layout>

@@ -19,11 +19,13 @@ class StoreRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
+                'min:2',
             ],
             'client_phone' => [
                 'required',
                 'string',
                 'max:21',
+                'min:3',
                 'unique:orders,client_phone',
             ],
             'tariff' => [
@@ -39,6 +41,7 @@ class StoreRequest extends FormRequest
             'comment' => [
                 'nullable',
                 'string',
+                'max:65535',
             ],
 
             'first_date' => [
