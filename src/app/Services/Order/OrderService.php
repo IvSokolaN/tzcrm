@@ -16,6 +16,10 @@ class OrderService
     private Order $order;
     private Tariff $tariff;
 
+    /**
+     * @param StoreRequest $request
+     * @return void
+     */
     public function createOrder(StoreRequest $request): void
     {
         DB::transaction(function () use ($request) {
@@ -47,6 +51,12 @@ class OrderService
         );
     }
 
+    /**
+     * @param array $dateFroms
+     * @param array $dateTos
+     * @param string $deliveryScheduleType
+     * @return void
+     */
     public function createMealPlans(array $dateFroms, array $dateTos, string $deliveryScheduleType): void
     {
         foreach ($dateFroms as $index => $dateFrom) {
@@ -63,10 +73,13 @@ class OrderService
         }
     }
 
-    private function generateMealPlans(
-        $deliveryScheduleType,
-        Carbon $startDate,
-        Carbon $endDate): array
+    /**
+     * @param $deliveryScheduleType
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return array
+     */
+    private function generateMealPlans($deliveryScheduleType, Carbon $startDate, Carbon $endDate): array
     {
         return match ($deliveryScheduleType) {
             DeliveryScheduleType::EVERY_DAY => $this->getMealPlans($startDate, $endDate, 1),
@@ -76,6 +89,11 @@ class OrderService
         };
     }
 
+    /**
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return array
+     */
     private function getEveryOtherDayTwice(Carbon $startDate, Carbon $endDate): array
     {
         $data = [];
@@ -96,6 +114,12 @@ class OrderService
         return $data;
     }
 
+    /**
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @param int $addDays
+     * @return array
+     */
     private function getMealPlans(Carbon $startDate, Carbon $endDate, int $addDays): array
     {
         $data = [];
@@ -107,6 +131,10 @@ class OrderService
         return $data;
     }
 
+    /**
+     * @param Carbon $startDate
+     * @return array
+     */
     private function getDataMeals(Carbon $startDate): array
     {
         $cookingDate = $this->tariff->cooking_day_before
@@ -120,6 +148,11 @@ class OrderService
         ];
     }
 
+    /**
+     * @param StoreRequest $request
+     * @param string $userPhone
+     * @return array
+     */
     private function prepareOrderData(StoreRequest $request, string $userPhone): array
     {
         return [

@@ -12,7 +12,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -47,8 +46,6 @@ class OrderController extends Controller
      */
     public function store(StoreRequest $request, OrderService $orderService): RedirectResponse
     {
-//        dd($request->all());
-
         $orderService->createOrder($request);
 
         return redirect()->route('orders.index');
