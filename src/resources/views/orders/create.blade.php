@@ -6,7 +6,7 @@
     <div class="card bg-base-100 w-full shadow-xl">
         <form action="{{ route('orders.store') }}"
               method="POST"
-              class="card-body w-1/3">
+              class="card-body gap-3">
             @csrf
 
             <div class="label">
@@ -48,7 +48,7 @@
                     <option disabled selected>Выберите тариф</option>
                     @foreach($tariffs as $tariff)
                         <option value="{{ $tariff->id }}"
-                            {{ old('tariff_id') == $tariff->id ? 'selected' : '' }}>
+                            {{ old('tariff') == $tariff->id ? 'selected' : '' }}>
                             {{ $tariff->ration_name }}
                         </option>
                     @endforeach
@@ -69,7 +69,9 @@
                     <option disabled selected>Тип расписания доставки рационов</option>
                     @foreach ($deliveryScheduleTypes as $deliveryScheduleType)
                         <option
-                            value="{{ $deliveryScheduleType }}">{{ __('delivery_schedule.' . $deliveryScheduleType) }}</option>
+                            value="{{ $deliveryScheduleType }}">
+                            {{ __('delivery_schedule.' . $deliveryScheduleType) }}
+                        </option>
                     @endforeach
                 </select>
             </label>
@@ -91,35 +93,86 @@
             </span>
             @enderror
 
-            <div class="label">
-                <span class="label-text">Дата от</span>
-            </div>
-            <input type="date"
-                   placeholder="Дата от"
-                   class="input input-bordered w-full"
-                   name="first_date"
-                   value="{{ old('first_date') }}"
-            />
-            @error('first_date')
-            <span class="text-red-500">
-                {{ $message }}
-            </span>
-            @enderror
+            <fieldset>
+                <legend class="text-xl">Даты доставки</legend>
+                <div class="flex flex-col gap-4 mt-4">
+                    <h2>Период 1</h2>
 
-            <div class="label">
-                <span class="label-text">Дата до</span>
-            </div>
-            <input type="date"
-                   placeholder="Дата до"
-                   class="input input-bordered w-full"
-                   name="last_date"
-                   value="{{ old('last_date') }}"
-            />
-            @error('last_date')
-            <span class="text-red-500">
-                {{ $message }}
-            </span>
-            @enderror
+                    <div class="flex justify-between gap-6">
+                        <div class="flex-1">
+                            <div class="label w-1/5">
+                                <span class="label-text">Дата от</span>
+                            </div>
+                            <input type="date"
+                                   placeholder="Дата от"
+                                   class="input input-bordered w-full"
+                                   name="first_date[]"
+                                   value="{{ old('first_date.0') }}"
+                            />
+                            @error('first_date.0')
+                            <span class="text-red-500">
+                                {{ $message }}
+                            </span>
+                            @enderror
+                        </div>
+
+                        <div class="flex-1">
+                            <div class="label w-1/5">
+                                <span class="label-text">Дата до</span>
+                            </div>
+                            <input type="date"
+                                   placeholder="Дата до"
+                                   class="input input-bordered w-full"
+                                   name="last_date[]"
+                                   value="{{ old('last_date.0') }}"
+                            />
+                            @error('last_date.0')
+                            <span class="text-red-500">
+                                {{ $message }}
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <h2>Период 2</h2>
+
+                    <div class="flex justify-between gap-6">
+                        <div class="flex-1">
+                            <div class="label w-1/5">
+                                <span class="label-text">Дата от</span>
+                            </div>
+                            <input type="date"
+                                   placeholder="Дата от"
+                                   class="input input-bordered w-full"
+                                   name="first_date[]"
+                                   value="{{ old('first_date.1') }}"
+                            />
+                            @error('first_date.1')
+                            <span class="text-red-500">
+                                {{ $message }}
+                            </span>
+                            @enderror
+                        </div>
+
+                        <div class="flex-1">
+                            <div class="label w-1/5">
+                                <span class="label-text">Дата до</span>
+                            </div>
+                            <input type="date"
+                                   placeholder="Дата до"
+                                   class="input input-bordered w-full"
+                                   name="last_date[]"
+                                   value="{{ old('last_date.1') }}"
+                            />
+                            @error('last_date.1')
+                            <span class="text-red-500">
+                                {{ $message }}
+                            </span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
 
             <button type="submit" class="btn btn-primary mt-4">Создать</button>
         </form>

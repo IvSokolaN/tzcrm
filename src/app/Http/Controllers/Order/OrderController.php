@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -41,59 +42,55 @@ class OrderController extends Controller
         ));
     }
 
-    public function store(StoreRequest $request)
+    /**
+     * @param StoreRequest $request
+     * @return RedirectResponse
+     */
+    public function store(StoreRequest $request): RedirectResponse
     {
-        // В first_date и last_date записывается самая ранняя и самая поздняя дата доставки среди созданных рационов питания.
-        // TODO сделать статичный список дат
-
-        $deliveryScheduleType = DeliveryScheduleType::from($request->string('delivery_schedule_type'));
-
         $tariff = Tariff::query()
             ->findOrFail($request->integer('tariff'));
 
-        $userPhone = Str::replaceMatches(
-            pattern: '/[^A-Za-z0-9]++/',
-            replace: '',
-            subject: $request->string('client_phone')
-        );
-        $firstDate = $request->date('first_date');
-        $lastDate = $request->date('last_date');
+        DB::transaction(function () use ($tariff, $request) {
+            $dateFroms = $request->array('first_date');
+            $dateTos = $request->array('last_date');
+            $firstDate = $dateFroms[0];
+            $lastDate = $dateTos[array_key_last($dateTos)];
+            $deliveryScheduleType = DeliveryScheduleType::from($request->string('delivery_schedule_type'));
+            $userPhone = Str::replaceMatches(
+                pattern: '/[^0-9]++/',
+                replace: '',
+                subject: $request->string('client_phone')
+            );
 
-        DB::transaction(function () use (
-            $deliveryScheduleType,
-            $tariff,
-            $userPhone,
-            $firstDate,
-            $lastDate,
-            $request
-        ) {
             $order = Order::query()
                 ->create([
                     'client_name' => $request->string('client_name'),
                     'client_phone' => $userPhone,
                     'schedule_type' => $deliveryScheduleType,
-                    'comment' => $request->comment,
+                    'comment' => $request->string('comment'),
                     'first_date' => $firstDate,
                     'last_date' => $lastDate,
                     'tariff_id' => $request->integer('tariff'),
                 ]);
 
-            $startDate = $request->date('first_date');
-            $endDate = $request->date('last_date');
-            $data = $this->generateMealPlans(
-                $deliveryScheduleType,
-                $startDate,
-                $endDate,
-                $tariff->cooking_day_before,
-                $order->id);
+            foreach ($dateFroms as $index => $dateFrom) {
+                $startDate = Carbon::parse($dateFrom);
+                $endDate = Carbon::parse($dateTos[$index]);
 
-            MealPlan::query()->insert($data);
+                $data = $this->generateMealPlans(
+                    $deliveryScheduleType,
+                    $startDate,
+                    $endDate,
+                    $tariff->cooking_day_before,
+                    $order->id
+                );
+
+                MealPlan::query()->insert($data);
+            }
         });
 
-        dd($request->all(),
-            $deliveryScheduleType,
-            $tariff->cooking_day_before,
-        );
+        return redirect()->route('orders.index');
     }
 
     private function generateMealPlans(
